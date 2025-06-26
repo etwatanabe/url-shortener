@@ -17,6 +17,13 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {}
+    "paths": {
+      "libs/prisma": [
+        "libs/prisma/src"
+      ],
+      "libs/prisma/*": [
+        "libs/prisma/src/*"
+      ]
+    }
   }
 }
