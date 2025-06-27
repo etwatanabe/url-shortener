@@ -1,5 +1,5 @@
 DOCKER_COMPOSE = docker compose
-ENV = .env
+ENV = .env.local
 
 ifeq ($(OS),Windows_NT)
 help: ## Available commands
