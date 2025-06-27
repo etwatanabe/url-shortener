@@ -10,10 +10,14 @@ import { CreateUrlDto } from './dto/create-url.dto';
 import { UrlResponseDto } from './dto/url-response.dto';
 import { UrlStatsDto } from './dto/url-stats-response.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UrlShortenerServiceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService,
+  ) {}
 
   private async generateShortUrl(): Promise<string> {
     let shortUrl: string;
@@ -45,7 +49,7 @@ export class UrlShortenerServiceService {
   }
 
   private formatShortUrl(shortUrl: string): string {
-    return `${process.env.BASE_URL ?? 'http://localhost:3000'}/${shortUrl}`;
+    return `${this.config.get<string>('BASE_URL') ?? 'http://localhost:3000'}/${shortUrl}`;
   }
 
   async create(
@@ -155,6 +159,7 @@ export class UrlShortenerServiceService {
   async updateUrl(
     id: string,
     updateUrlDto: UpdateUrlDto,
+    userId: string,
   ): Promise<UrlResponseDto> {
     const url = await this.prisma.url.findFirst({
       where: { id: id, deletedAt: null },
@@ -164,7 +169,7 @@ export class UrlShortenerServiceService {
       throw new NotFoundException('URL not found');
     }
 
-    if (url.userId !== updateUrlDto.userId) {
+    if (url.userId !== userId) {
       throw new ForbiddenException('Not allowed');
     }
 

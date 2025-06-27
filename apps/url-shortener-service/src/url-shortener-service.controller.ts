@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Redirect,
+  UseGuards,
 } from '@nestjs/common';
 import { UrlShortenerServiceService } from './url-shortener-service.service';
 import {
@@ -14,9 +17,14 @@ import {
   ApiTags,
   ApiBody,
   ApiParam,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UrlResponseDto } from './dto/url-response.dto';
+import { UpdateUrlDto } from './dto/update-url.dto';
+import { UrlStatsDto } from './dto/url-stats-response.dto';
+import { GetUserId } from './decorator/get-user-id.decorator';
+import { JwtAuthGuard, OptionalJwtAuthGuard } from 'libs/auth';
 
 @ApiTags('urls')
 @Controller()
@@ -26,6 +34,7 @@ export class UrlShortenerServiceController {
   ) {}
 
   @Post('shorten')
+  @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({
     summary: 'Create a short URL',
     description: 'Receives a long URL and returns a shortened version.',
@@ -69,8 +78,64 @@ export class UrlShortenerServiceController {
       },
     },
   })
-  async shorten(@Body() createUrlDto: CreateUrlDto) {
-    return this.urlShortenerService.create(createUrlDto);
+  async shorten(
+    @Body() createUrlDto: CreateUrlDto,
+    @GetUserId() userId: string,
+  ) {
+    return this.urlShortenerService.create(createUrlDto, userId);
+  }
+
+  @Get('urls')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List user URLs with click stats' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of URLs for the authenticated user',
+    type: [UrlStatsDto],
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async listUserUrls(@GetUserId() userId: string) {
+    return this.urlShortenerService.listUserUrls(userId);
+  }
+
+  @Delete('urls/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a short URL' })
+  @ApiParam({ name: 'id', description: 'URL id' })
+  @ApiResponse({
+    status: 200,
+    description: 'URL deleted',
+    type: UrlResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Not allowed' })
+  @ApiResponse({ status: 404, description: 'URL not found' })
+  async deleteUrl(@Param('id') id: string, @GetUserId() userId: string) {
+    return this.urlShortenerService.deleteUrl(id, userId);
+  }
+
+  @Patch('urls/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update the original URL of a short URL' })
+  @ApiParam({ name: 'id', description: 'URL id' })
+  @ApiBody({ type: UpdateUrlDto })
+  @ApiResponse({
+    status: 200,
+    description: 'URL updated',
+    type: UrlResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Not allowed' })
+  @ApiResponse({ status: 404, description: 'URL not found' })
+  async updateUrl(
+    @Param('id') id: string,
+    @Body() updateUrlDto: UpdateUrlDto,
+    @GetUserId() userId: string,
+  ) {
+    return this.urlShortenerService.updateUrl(id, updateUrlDto, userId);
   }
 
   @Get(':shortUrl')
