@@ -32,8 +32,13 @@ export class UrlShortenerServiceController {
 
   @Get(':shortUrl')
   @Redirect()
-  @ApiOperation({ summary: 'Redirects to the original URL' })
+  @ApiOperation({
+    summary: 'Redirects to the original URL',
+    description:
+      'NOTE: Swagger UI does not follow redirects, so you may see "Failed to fetch" here.',
+  })
   @ApiResponse({ status: 302, description: 'Redirects to the original URL' })
+  @ApiResponse({ status: 404, description: 'Short URL not found' })
   async redirect(@Param('shortUrl') shortUrl: string) {
     const longUrl = await this.urlShortenerService.redirect(shortUrl);
     if (!longUrl) throw new NotFoundException();
