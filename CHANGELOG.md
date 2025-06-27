@@ -9,6 +9,8 @@
 - Swagger documentation for the authentication service.
 - Automated tests (unit and e2e) for authentication flows.
 - Docker Compose adjustments to support multiple services.
+- Lint and test GitHub Actions workflows.
+- Improved error handling and validation in both services.
 
 ---
 
