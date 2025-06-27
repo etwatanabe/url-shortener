@@ -7,14 +7,13 @@ import { ConflictException, UnauthorizedException } from '@nestjs/common';
 
 describe('AuthServiceController', () => {
   let controller: AuthServiceController;
-  let service: AuthServiceService;
+
+  const mockService = {
+    register: jest.fn(),
+    login: jest.fn(),
+  };
 
   beforeEach(async () => {
-    const mockService = {
-      register: jest.fn(),
-      login: jest.fn(),
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthServiceController],
       providers: [
@@ -26,7 +25,6 @@ describe('AuthServiceController', () => {
     }).compile();
 
     controller = module.get<AuthServiceController>(AuthServiceController);
-    service = module.get<AuthServiceService>(AuthServiceService);
   });
 
   it('should be defined', () => {
@@ -44,11 +42,11 @@ describe('AuthServiceController', () => {
         accessToken: 'token',
         user: { id: '1', email: dto.email, name: dto.name },
       };
-      jest.spyOn(service, 'register').mockResolvedValueOnce(mockResponse);
+      mockService.register.mockResolvedValueOnce(mockResponse);
 
       const result = await controller.register(dto);
       expect(result).toEqual(mockResponse);
-      expect(service.register).toHaveBeenCalledWith(dto);
+      expect(mockService.register).toHaveBeenCalledWith(dto);
     });
 
     it('should throw ConflictException if email already registered', async () => {
@@ -57,9 +55,7 @@ describe('AuthServiceController', () => {
         password: 'password123',
         name: 'Test User',
       };
-      jest
-        .spyOn(service, 'register')
-        .mockRejectedValueOnce(new ConflictException());
+      mockService.register.mockRejectedValueOnce(new ConflictException());
 
       await expect(controller.register(dto)).rejects.toThrow(ConflictException);
     });
@@ -75,11 +71,11 @@ describe('AuthServiceController', () => {
         accessToken: 'token',
         user: { id: '1', email: dto.email, name: 'Test User' },
       };
-      jest.spyOn(service, 'login').mockResolvedValueOnce(mockResponse);
+      mockService.login.mockResolvedValueOnce(mockResponse);
 
       const result = await controller.login(dto);
       expect(result).toEqual(mockResponse);
-      expect(service.login).toHaveBeenCalledWith(dto);
+      expect(mockService.login).toHaveBeenCalledWith(dto);
     });
 
     it('should throw UnauthorizedException if credentials are invalid', async () => {
@@ -87,10 +83,7 @@ describe('AuthServiceController', () => {
         email: 'user@example.com',
         password: 'wrongpassword',
       };
-      jest
-        .spyOn(service, 'login')
-        .mockRejectedValueOnce(new UnauthorizedException());
-
+      mockService.login.mockRejectedValueOnce(new UnauthorizedException());
       await expect(controller.login(dto)).rejects.toThrow(
         UnauthorizedException,
       );
