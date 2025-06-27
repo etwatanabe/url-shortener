@@ -15,7 +15,7 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.URL_SHORTENER_SERVICE_PORT ?? 3000);
 }
 bootstrap().catch((error) => {
   console.error('Error during application bootstrap:', error);
