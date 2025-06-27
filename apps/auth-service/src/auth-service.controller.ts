@@ -1,4 +1,10 @@
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthServiceService } from './auth-service.service';
 import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 import { AuthResponseDto } from './dto/auth-response.dto';
@@ -64,6 +70,7 @@ export class AuthServiceController {
   }
 
   @Post('login')
+  @HttpCode(200)
   @ApiOperation({
     summary: 'Login user',
     description: 'Authenticates a user and returns an access token.',
