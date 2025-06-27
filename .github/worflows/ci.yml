@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: urlshortener
+          POSTGRES_PASSWORD: urlshortener
+          POSTGRES_DB: urlshortener
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U urlshortener" 
+          --health-interval=5s 
+          --health-timeout=3s 
+          --health-retries=10
+
+    env:
+      DATABASE_URL: postgres://urlshortener:urlshortener@postgres:5432/urlshortener
+      JWT_SECRET: test_secret
+      BASE_URL: http://localhost:3000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run Prisma migrations
+        run: npx prisma migrate deploy
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Unit Tests
+        run: npm run test
+
+      - name: Run E2E Tests
+        run: npm run test:e2e
