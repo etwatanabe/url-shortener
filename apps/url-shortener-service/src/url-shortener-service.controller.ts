@@ -80,7 +80,7 @@ export class UrlShortenerServiceController {
   })
   async shorten(
     @Body() createUrlDto: CreateUrlDto,
-    @GetUserId() userId: string,
+    @GetUserId() userId: string | undefined,
   ) {
     return this.urlShortenerService.create(createUrlDto, userId);
   }
