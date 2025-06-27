@@ -9,6 +9,7 @@ import { PrismaService } from 'libs/prisma';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UrlResponseDto } from './dto/url-response.dto';
 import { UrlStatsDto } from './dto/url-stats-response.dto';
+import { UpdateUrlDto } from './dto/update-url.dto';
 
 @Injectable()
 export class UrlShortenerServiceService {
@@ -149,6 +150,40 @@ export class UrlShortenerServiceService {
         createdAt: 'desc',
       },
     });
+  }
+
+  async updateUrl(
+    id: string,
+    updateUrlDto: UpdateUrlDto,
+  ): Promise<UrlResponseDto> {
+    const url = await this.prisma.url.findFirst({
+      where: { id: id, deletedAt: null },
+    });
+
+    if (!url) {
+      throw new NotFoundException('URL not found');
+    }
+
+    if (url.userId !== updateUrlDto.userId) {
+      throw new ForbiddenException('Not allowed');
+    }
+
+    const updatedUrl = await this.prisma.url.update({
+      where: { id: id },
+      data: {
+        longUrl: updateUrlDto.longUrl,
+      },
+    });
+
+    return {
+      id: updatedUrl.id,
+      longUrl: updatedUrl.longUrl,
+      shortUrl: updatedUrl.shortUrl,
+      userId: updatedUrl.userId,
+      clicks: updatedUrl.clicks,
+      createdAt: updatedUrl.createdAt,
+      updatedAt: updatedUrl.updatedAt,
+    };
   }
 
   async deleteUrl(id: string, userId: string): Promise<UrlResponseDto> {
