@@ -18,6 +18,12 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "libs/auth": [
+        "libs/auth/src"
+      ],
+      "libs/auth/*": [
+        "libs/auth/src/*"
+      ],
       "libs/prisma": [
         "libs/prisma/src"
       ],

@@ -95,6 +95,7 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
+      "^libs/auth(|/.*)$": "<rootDir>/libs/auth/src/$1",
       "^libs/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1"
     }
   }
