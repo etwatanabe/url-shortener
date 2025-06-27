@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: urlshortener
+      POSTGRES_PASSWORD: urlshortener
+      POSTGRES_DB: urlshortener
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  prisma-migrate:
+    build:
+      context: .
+      dockerfile: ./apps/auth-service/Dockerfile
+    command: npx prisma migrate deploy
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - postgres
+
+  # URL Shortener Service
+  url-shortener-service:
+    build: 
+      context: .
+      dockerfile: ./apps/url-shortener-service/Dockerfile
+    command: node dist/apps/url-shortener-service/main.js
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - postgres
+      - prisma-migrate
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
