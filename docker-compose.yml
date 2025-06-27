@@ -21,6 +21,21 @@ services:
     depends_on:
       - postgres
 
+  # Auth Service
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./apps/auth-service/Dockerfile
+    command: node dist/apps/auth-service/main.js
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - postgres
+      - prisma-migrate
+    ports:
+      - "3001:3001"
+
   # URL Shortener Service
   url-shortener-service:
     build: 

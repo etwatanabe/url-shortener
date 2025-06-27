@@ -11,7 +11,7 @@ COPY apps ./apps
 COPY libs ./libs
 
 RUN npm install
-RUN npm run build -- url-shortener-service
+RUN npm run build:url-shortener
 
 FROM node:22.17-alpine
 
