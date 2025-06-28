@@ -23,9 +23,9 @@ describe('AuthServiceController (e2e)', () => {
   });
 
   const user = {
-    email: `test${Date.now()}@example.com`,
+    email: `authE2ETest${Date.now()}@example.com`,
     password: 'password123',
-    name: 'Test User',
+    name: 'Auth E2E Test User',
   };
 
   type AuthResponse = {
