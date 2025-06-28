@@ -6,7 +6,9 @@ A simple URL shortener service built with [NestJS](https://nestjs.com/), [Prisma
 
 - Shorten any valid URL to a short code.
 - Redirect from a short code to the original URL.
-- View API documentation via Swagger.
+- Authenticated user support: each user can manage their own URLs.
+- URL click count.
+- Full API documentation via Swagger.
 - Docker Compose for easy local development.
 
 ## Getting Started
@@ -63,7 +65,9 @@ Main commands:
 2. **Access the service:**
 
    - URL Shortener API: [http://localhost:3000](http://localhost:3000)
-   - Swagger docs: [http://localhost:3000/docs](http://localhost:3000/docs)
+   - URL Shortener Swagger docs: [http://localhost:3000/docs](http://localhost:3000/docs)
+   - Auth API: [http://localhost:3001](http://localhost:3001)
+   - Auth Swagger docs: [http://localhost:3000/docs](http://localhost:3001/docs)
 
 3. **Stop all services:**
 
@@ -96,7 +100,8 @@ Main commands:
 4. **Start the service:**
 
    ```sh
-   npm run start
+   npm run start:auth
+   npm run start:url-shortener
    ```
 
 5. **Access the API and Swagger as above.**
@@ -105,7 +110,9 @@ Main commands:
 
 ## API Documentation
 
-Swagger is available at: [http://localhost:3000/docs](http://localhost:3000/docs)
+Swagger is available at:
+- [http://localhost:3000/docs](http://localhost:3000/docs) (URL Shortener)
+- [http://localhost:3001/docs](http://localhost:3001/docs) (Auth Service)
 
 ---
 
@@ -147,9 +154,11 @@ Redirects to the original URL.
 ## Running Tests
 
 ```sh
-npm run test --workspace=apps/url-shortener-service
-npm run test:e2e --workspace=apps/url-shortener-service
+npm run test
+npm run test:e2e
 ```
+
+E2E tests require both the Auth Service and URL Shortener Service to be running and use the same database.
 
 ---
 
