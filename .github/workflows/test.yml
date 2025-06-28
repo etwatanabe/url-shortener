@@ -26,7 +26,7 @@ jobs:
           --health-retries=20
 
     env:
-      DATABASE_URL: postgres://urlshortener:urlshortener@localhost:5432/urlshortener
+      DATABASE_URL: postgres://urlshortener:urlshortener@postgres:5432/urlshortener
       JWT_SECRET: test_secret
       BASE_URL: http://localhost:3000
 
@@ -50,6 +50,21 @@ jobs:
 
       - name: Run Prisma migrations
         run: npx prisma migrate deploy
+
+      - name: Build Auth Service
+        run: npm run build:auth
+
+      - name: Start Auth Service
+        run: node dist/apps/auth-service/main.js &
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          JWT_SECRET: ${{ env.JWT_SECRET }}
+
+      - name: Wait for Auth Service
+        run: sleep  10
+
+      - name: Build URL Shortener Service
+        run: npm run build:url-shortener
 
       - name: Run Unit Tests
         run: npm run test
