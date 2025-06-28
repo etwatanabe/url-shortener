@@ -109,9 +109,39 @@ export class UrlShortenerServiceController {
     description: 'URL deleted',
     type: UrlResponseDto,
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Not allowed' })
-  @ApiResponse({ status: 404, description: 'URL not found' })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+    schema: {
+      example: {
+        statusCode: 401,
+        message: 'Unauthorized',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Not allowed',
+    schema: {
+      example: {
+        statusCode: 403,
+        message: 'Not allowed',
+        error: 'Forbidden',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'URL not found',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'URL not found',
+        error: 'Not Found',
+      },
+    },
+  })
   async deleteUrl(@Param('id') id: string, @GetUserId() userId: string) {
     return this.urlShortenerService.deleteUrl(id, userId);
   }
@@ -127,9 +157,39 @@ export class UrlShortenerServiceController {
     description: 'URL updated',
     type: UrlResponseDto,
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Not allowed' })
-  @ApiResponse({ status: 404, description: 'URL not found' })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+    schema: {
+      example: {
+        statusCode: 401,
+        message: 'Unauthorized',
+        error: 'Unauthorized',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Not allowed',
+    schema: {
+      example: {
+        statusCode: 403,
+        message: 'Not allowed',
+        error: 'Forbidden',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'URL not found',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'URL not found',
+        error: 'Not Found',
+      },
+    },
+  })
   async updateUrl(
     @Param('id') id: string,
     @Body() updateUrlDto: UpdateUrlDto,
