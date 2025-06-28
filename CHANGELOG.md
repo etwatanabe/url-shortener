@@ -1,5 +1,16 @@
 # Changelog
 
+## [v0.3.1] - 2024-06-28
+
+### Added
+
+- Husky and lint-staged configuration for pre-commit and pre-push Git hooks.
+  - Pre-commit: runs Prettier and ESLint on staged files.
+  - Pre-push: runs unit tests.
+- Updated README with instructions for setting up and using Git hooks.
+
+---
+
 ## [v0.3.0] - 2024-06-28
 
 ### Added
