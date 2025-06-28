@@ -162,6 +162,31 @@ E2E tests require both the Auth Service and URL Shortener Service to be running 
 
 ---
 
+## Git Hooks (Husky + lint-staged)
+
+This project uses [Husky](https://typicode.github.io/husky/) and [lint-staged](https://github.com/okonet/lint-staged) to ensure code quality before commits and pushes.
+
+- **Pre-commit:** Runs Prettier and ESLint only on staged files.
+- **Pre-push:** Runs unit tests.
+
+### How to set up hooks locally
+
+After cloning the repository and installing dependencies, run:
+
+```sh
+npm run prepare
+```
+
+The hooks will be activated automatically.
+
+### What happens on hooks
+
+- On commit, code will be formatted and linted for staged files.
+- On push, all unit tests will be executed.
+- If any of these steps fail, the commit or push will be blocked.
+
+---
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.
