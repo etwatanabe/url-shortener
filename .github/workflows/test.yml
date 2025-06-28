@@ -26,7 +26,7 @@ jobs:
           --health-retries=20
 
     env:
-      DATABASE_URL: postgres://urlshortener:urlshortener@postgres:5432/urlshortener
+      DATABASE_URL: postgres://urlshortener:urlshortener@localhost:5432/urlshortener
       JWT_SECRET: test_secret
       BASE_URL: http://localhost:3000
 
