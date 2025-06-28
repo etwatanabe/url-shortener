@@ -1,0 +1,80 @@
+{
+  "version": 3,
+  "name": "url-shortener-gateway",
+  "port": 8080,
+  "timeout": "3000ms",
+  "endpoints": [
+    {
+      "endpoint": "/auth/register",
+      "output_encoding": "no-op",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/auth/register",
+          "output_encoding": "no-op",
+          "host": ["http://auth-service:3001"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/auth/login",
+      "output_encoding": "no-op",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/auth/login",
+          "output_encoding": "no-op",
+          "host": ["http://auth-service:3001"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/shorten",
+      "output_encoding": "no-op",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/shorten",
+          "output_encoding": "no-op",
+          "host": ["http://url-shortener-service:3000"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/urls",
+      "output_encoding": "no-op",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/urls",
+          "output_encoding": "no-op",
+          "host": ["http://url-shortener-service:3000"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/urls/{id}",
+      "output_encoding": "no-op",
+      "method": "PATCH,DELETE",
+      "backend": [
+        {
+          "url_pattern": "/urls/{id}",
+          "output_encoding": "no-op",
+          "host": ["http://url-shortener-service:3000"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/{shortUrl}",
+      "output_encoding": "no-op",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/{shortUrl}",
+          "output_encoding": "no-op",
+          "host": ["http://url-shortener-service:3000"]
+        }
+      ]
+    }
+  ]
+}

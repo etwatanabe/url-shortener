@@ -28,7 +28,6 @@ services:
       postgres:
         condition: service_healthy
 
-  # Auth Service
   auth-service:
     build:
       context: .
@@ -45,7 +44,6 @@ services:
     ports:
       - "3001:3001"
 
-  # URL Shortener Service
   url-shortener-service:
     build: 
       context: .
@@ -61,6 +59,16 @@ services:
         condition: service_completed_successfully
     ports:
       - "3000:3000"
+
+  krakend:
+    image: krakend:2.9
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./krakend/krakend.json:/etc/krakend/krakend.json
+    depends_on:
+      - auth-service
+      - url-shortener-service
 
 volumes:
   pgdata:
