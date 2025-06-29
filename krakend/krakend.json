@@ -32,6 +32,8 @@
       "endpoint": "/shorten",
       "output_encoding": "no-op",
       "method": "POST",
+      "input_headers": ["Authorization", "*"],
+      "output_headers": ["Authorization", "*"],
       "backend": [
         {
           "url_pattern": "/shorten",
@@ -41,12 +43,14 @@
       ]
     },
     {
-      "endpoint": "/urls",
+      "endpoint": "/urls/{id}",
       "output_encoding": "no-op",
-      "method": "GET",
+      "method": "PATCH",
+      "input_headers": ["Authorization", "*"],
+      "output_headers": ["Authorization", "*"],
       "backend": [
         {
-          "url_pattern": "/urls",
+          "url_pattern": "/urls/{id}",
           "output_encoding": "no-op",
           "host": ["http://url-shortener-service:3000"]
         }
@@ -55,10 +59,26 @@
     {
       "endpoint": "/urls/{id}",
       "output_encoding": "no-op",
-      "method": "PATCH,DELETE",
+      "method": "DELETE",
+      "input_headers": ["Authorization", "*"],
+      "output_headers": ["Authorization", "*"],
       "backend": [
         {
           "url_pattern": "/urls/{id}",
+          "output_encoding": "no-op",
+          "host": ["http://url-shortener-service:3000"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/urls",
+      "output_encoding": "no-op",
+      "method": "GET",
+      "input_headers": ["Authorization", "*"],
+      "output_headers": ["Authorization", "*"],
+      "backend": [
+        {
+          "url_pattern": "/urls",
           "output_encoding": "no-op",
           "host": ["http://url-shortener-service:3000"]
         }
