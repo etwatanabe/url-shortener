@@ -5,10 +5,12 @@ import { PrismaModule } from 'libs/prisma';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from 'libs/auth';
+import { CustomLoggerModule } from 'libs/custom-logger';
 
 @Module({
   imports: [
     PrismaModule,
+    CustomLoggerModule,
     ConfigModule.forRoot({ isGlobal: true }),
     JwtModule.registerAsync({
       inject: [ConfigService],
