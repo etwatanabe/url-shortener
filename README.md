@@ -40,10 +40,10 @@ Use the provided `.env.example` file as a base for your environment configuratio
 Copy it to create your local environment file:
 
 ```sh
-cp .env.example .env.local
+cp .env.example .env
 ```
 
-Then, adjust the values in `.env.local` if needed:
+Then, adjust the values in `.env` if needed:
 
 
 **Main variables:**
@@ -57,7 +57,7 @@ Then, adjust the values in `.env.local` if needed:
 | POSTGRES_PASSWORD | Password for the PostgreSQL container (must match DATABASE_URL).                       | password                                 |
 | POSTGRES_DB   | Database name for the PostgreSQL container (must match DATABASE_URL).                      | database                                       |
 
-> These variables must be consistent between `.env.local` and your Docker Compose setup.
+> These variables must be consistent between `.env` and your Docker Compose setup.
 
 ## Using Makefile
 
@@ -112,7 +112,7 @@ choco install make
 1. **Start all services:**
 
    ```sh
-   docker compose -f docker-compose.yml --env-file .env.local up -d --build
+   docker compose -f docker-compose.yml --env-file .env up -d --build
    ```
 
 2. **Access the services**
@@ -122,7 +122,7 @@ choco install make
 3. **Stop all services:**
 
    ```sh
-   docker compose -f docker-compose.yml --env-file .env.local down
+   docker compose -f docker-compose.yml --env-file .env down
    ```
 
 ---
@@ -144,7 +144,7 @@ This project uses [KrakenD](https://www.krakend.io/) as an API Gateway to provid
 
 ### BASE_URL configuration
 
-To ensure that generated short URLs point to the gateway, set in your `.env.local`:
+To ensure that generated short URLs point to the gateway, set in your `.env`:
 
 ```
 BASE_URL=http://localhost:8080
@@ -207,7 +207,8 @@ Redirects to the original URL.
 
 ```sh
 npm run test
-npm run test:e2e
+npm run test:e2e:auth
+npm run test:e2e:url-shortener
 ```
 
 E2E tests require both the Auth Service and URL Shortener Service to be running and use the same database.
