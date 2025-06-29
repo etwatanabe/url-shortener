@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { UrlShortenerServiceModule } from './url-shortener-service.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { CustomLoggerService } from 'libs/custom-logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(UrlShortenerServiceModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
 
   SwaggerModule.setup('docs', app, document);
+
+  app.useLogger(app.get(CustomLoggerService));
 
   await app.listen(process.env.URL_SHORTENER_SERVICE_PORT ?? 3000);
 }
