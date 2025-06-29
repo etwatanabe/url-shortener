@@ -61,7 +61,7 @@ services:
       - "3000:3000"
 
   krakend:
-    image: krakend:2.9
+    image: krakend:2.10
     ports:
       - "8080:8080"
     volumes:
