@@ -24,6 +24,12 @@
       "libs/auth/*": [
         "libs/auth/src/*"
       ],
+      "libs/custom-logger": [
+        "libs/custom-logger/src"
+      ],
+      "libs/custom-logger/*": [
+        "libs/custom-logger/src/*"
+      ],
       "libs/prisma": [
         "libs/prisma/src"
       ],
