@@ -45,10 +45,19 @@ cp .env.example .env.local
 
 Then, adjust the values in `.env.local` if needed:
 
-```
-BASE_URL=http://localhost:8080
-DATABASE_URL=postgres://urlshortener:urlshortener@postgres:5432/urlshortener
-```
+
+**Main variables:**
+
+| Variable      | Description                                                      | Default Value                                         |
+|---------------|------------------------------------------------------------------|-------------------------------------------------------|
+| BASE_URL      | Public URL used to generate short URLs (should match the public address of the API Gateway).    | http://localhost:8080                                 |
+| JWT_SECRET    | Secret key for signing JWT tokens.                               | jwt_secret_key                                        |
+| DATABASE_URL  | PostgreSQL connection string.             | postgres://user:password@postgres:5432/database |
+| POSTGRES_USER | Username for the PostgreSQL container (must match DATABASE_URL). | user                                     |
+| POSTGRES_PASSWORD | Password for the PostgreSQL container (must match DATABASE_URL).                       | password                                 |
+| POSTGRES_DB   | Database name for the PostgreSQL container (must match DATABASE_URL).                      | database                                       |
+
+> These variables must be consistent between `.env.local` and your Docker Compose setup.
 
 ## Using Makefile
 
