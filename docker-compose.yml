@@ -36,6 +36,8 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=${NODE_ENV}
+      - LOG_LEVEL=${LOG_LEVEL}
     depends_on:
       postgres:
         condition: service_healthy
@@ -50,8 +52,11 @@ services:
       dockerfile: ./apps/url-shortener-service/Dockerfile
     command: node dist/apps/url-shortener-service/main.js
     environment:
+      - BASE_URL=${BASE_URL}
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=${NODE_ENV}
+      - LOG_LEVEL=${LOG_LEVEL}
     depends_on:
       postgres:
         condition: service_healthy

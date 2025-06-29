@@ -63,18 +63,6 @@
           "host": ["http://url-shortener-service:3000"]
         }
       ]
-    },
-    {
-      "endpoint": "/{shortUrl}",
-      "output_encoding": "no-op",
-      "method": "GET",
-      "backend": [
-        {
-          "url_pattern": "/{shortUrl}",
-          "output_encoding": "no-op",
-          "host": ["http://url-shortener-service:3000"]
-        }
-      ]
     }
   ]
 }
