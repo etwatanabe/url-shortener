@@ -1,6 +1,22 @@
 # URL Shortener Service
 
-A simple URL shortener service built with [NestJS](https://nestjs.com/), [Prisma](https://www.prisma.io/), and [PostgreSQL](https://www.postgresql.org/).
+A simple URL shortener service built as a monorepo using [NestJS](https://nestjs.com/), [Prisma](https://www.prisma.io/), and [PostgreSQL](https://www.postgresql.org/).  
+The project follows a modular architecture with multiple services (such as authentication and URL management), orchestrated via Docker Compose and exposed through a unified API Gateway ([KrakenD](https://www.krakend.io/)).
+
+
+## Tech Stack
+
+- [NestJS](https://nestjs.com/) – Backend framework (monorepo, modular architecture)
+- [Prisma](https://www.prisma.io/) – ORM for PostgreSQL
+- [PostgreSQL](https://www.postgresql.org/) – Database
+- [Docker Compose](https://docs.docker.com/compose/) – Container orchestration for local development
+- [KrakenD](https://www.krakend.io/) – API Gateway
+- [Swagger / OpenAPI](https://swagger.io/) – API documentation
+- [Jest](https://jestjs.io/) – Unit and E2E testing
+- [Husky](https://typicode.github.io/husky/) & [lint-staged](https://github.com/lint-staged/lint-staged) – Git hooks for code quality
+- [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/) – Linting and code formatting
+
+---
 
 ## Features
 
@@ -16,7 +32,6 @@ A simple URL shortener service built with [NestJS](https://nestjs.com/), [Prisma
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/) (optional, for local development)
 - [Make](https://www.gnu.org/software/make/) (optional, for easier commands)
 
 ### Environment Variables
@@ -31,8 +46,8 @@ cp .env.example .env.local
 Then, adjust the values in `.env.local` if needed:
 
 ```
+BASE_URL=http://localhost:8080
 DATABASE_URL=postgres://urlshortener:urlshortener@postgres:5432/urlshortener
-BASE_URL=http://localhost:3000
 ```
 
 ## Using Makefile
@@ -46,13 +61,19 @@ Main commands:
 - `make down` – Stop and remove all containers.
 - `make clean` – Remove containers, volumes, and networks (danger: data loss).
 
-> On Windows, use a terminal that supports `make` (e.g., Git Bash, WSL, or PowerShell with Make installed). You can install `make` using [chocolatey](https://chocolatey.org).
+> On Windows, use a terminal that supports `make` (e.g., Git Bash, WSL, or PowerShell with Make installed).
+
+You can install `make` using [chocolatey](https://chocolatey.org).
+
+```sh
+choco install make
+```
 
 ---
 
 ## How to Run the Project
 
-### With Docker Compose (recommended)
+### Using Make (recommended)
 
 1. **Start all services:**
 
@@ -63,11 +84,11 @@ Main commands:
    This will build and start the database and the URL shortener service.
 
 2. **Access the service:**
-
    - URL Shortener API: [http://localhost:3000](http://localhost:3000)
    - URL Shortener Swagger docs: [http://localhost:3000/docs](http://localhost:3000/docs)
    - Auth API: [http://localhost:3001](http://localhost:3001)
-   - Auth Swagger docs: [http://localhost:3000/docs](http://localhost:3001/docs)
+   - Auth Swagger docs: [http://localhost:3001/docs](http://localhost:3001/docs)
+   - API Gateway: [http://localhost:8080](http://localhost:8080)
 
 3. **Stop all services:**
 
@@ -77,40 +98,60 @@ Main commands:
 
 ---
 
-### Running Locally (without Docker)
+### Using Docker Compose directly
 
-1. **Start PostgreSQL** (you can use Docker just for the DB):
-
-   ```sh
-   docker compose up -d postgres
-   ```
-
-2. **Install dependencies:**
+1. **Start all services:**
 
    ```sh
-   npm install
+   docker compose -f docker-compose.yml --env-file .env.local up -d --build
    ```
 
-3. **Run Prisma migrations:**
+2. **Access the services**
+
+   Use the same URLs as with Make.
+
+3. **Stop all services:**
 
    ```sh
-   npx prisma migrate deploy
+   docker compose -f docker-compose.yml --env-file .env.local down
    ```
 
-4. **Start the service:**
+---
 
-   ```sh
-   npm run start:auth
-   npm run start:url-shortener
-   ```
+## API Gateway (KrakenD)
 
-5. **Access the API and Swagger as above.**
+This project uses [KrakenD](https://www.krakend.io/) as an API Gateway to provide a unified entry point for all services.
+
+- **Gateway URL:** [http://localhost:8080](http://localhost:8080)
+- All API requests (authentication, URL shortening, redirection, etc.) can be made through the gateway.
+
+### Example Endpoints via Gateway
+
+- Register: `POST http://localhost:8080/auth/register`
+- Login: `POST http://localhost:8080/auth/login`
+- Shorten URL: `POST http://localhost:8080/shorten`
+- List URLs: `GET http://localhost:8080/urls`
+- Redirect: `GET http://localhost:8080/{shortUrl}`
+
+### BASE_URL configuration
+
+To ensure that generated short URLs point to the gateway, set in your `.env.local`:
+
+```
+BASE_URL=http://localhost:8080
+```
+
+### How to run with KrakenD
+
+KrakenD is included in the Docker Compose setup.  
+When you run `make up` or `docker compose up`, the gateway will be available at [http://localhost:8080](http://localhost:8080).
 
 ---
 
 ## API Documentation
 
 Swagger is available at:
+
 - [http://localhost:3000/docs](http://localhost:3000/docs) (URL Shortener)
 - [http://localhost:3001/docs](http://localhost:3001/docs) (Auth Service)
 
@@ -121,7 +162,7 @@ Swagger is available at:
 ### Shorten a URL
 
 ```http
-POST http://localhost:3000/shorten
+POST http://localhost:8080/shorten
 Content-Type: application/json
 
 {
@@ -130,11 +171,12 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "id": "string",
   "longUrl": "https://www.example.com",
-  "shortUrl": "http://localhost:3000/abc123",
+  "shortUrl": "http://localhost:8080/abc123",
   "userId": null,
   "clicks": 0,
   "createdAt": "2024-06-27T12:00:00.000Z",
@@ -145,8 +187,9 @@ Content-Type: application/json
 ### Redirect
 
 ```http
-GET http://localhost:3000/abc123
+GET http://localhost:8080/abc123
 ```
+
 Redirects to the original URL.
 
 ---
