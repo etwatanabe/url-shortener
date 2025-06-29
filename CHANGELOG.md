@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.4.1] - 2024-06-29
+
+### Fixed
+
+- Fixed a bug in the KrakenD API Gateway configuration where using multiple HTTP methods (`PATCH,DELETE`) in a single endpoint caused routing errors.  
+  Now, each method (`PATCH` and `DELETE`) for `/urls/{id}` is configured as a separate endpoint in [`krakend/krakend.json`](krakend/krakend.json), ensuring proper request routing and compatibility with KrakenD.
+
+---
+
 ## [v0.4.0] - 2024-06-28
 
 ### API Gateway Integration and Improved Error Handling

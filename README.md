@@ -3,7 +3,6 @@
 A simple URL shortener service built as a monorepo using [NestJS](https://nestjs.com/), [Prisma](https://www.prisma.io/), and [PostgreSQL](https://www.postgresql.org/).  
 The project follows a modular architecture with multiple services (such as authentication and URL management), orchestrated via Docker Compose and exposed through a unified API Gateway ([KrakenD](https://www.krakend.io/)).
 
-
 ## Tech Stack
 
 - [NestJS](https://nestjs.com/) – Backend framework (monorepo, modular architecture)
@@ -45,17 +44,18 @@ cp .env.example .env
 
 Then, adjust the values in `.env` if needed:
 
-
 **Main variables:**
 
-| Variable      | Description                                                      | Default Value                                         |
-|---------------|------------------------------------------------------------------|-------------------------------------------------------|
-| BASE_URL      | Public URL used to generate short URLs (should match the public address of the API Gateway).    | http://localhost:8080                                 |
-| JWT_SECRET    | Secret key for signing JWT tokens.                               | jwt_secret_key                                        |
-| DATABASE_URL  | PostgreSQL connection string.             | postgres://user:password@postgres:5432/database |
-| POSTGRES_USER | Username for the PostgreSQL container (must match DATABASE_URL). | user                                     |
-| POSTGRES_PASSWORD | Password for the PostgreSQL container (must match DATABASE_URL).                       | password                                 |
-| POSTGRES_DB   | Database name for the PostgreSQL container (must match DATABASE_URL).                      | database                                       |
+| Variable          | Description                                                                                  | Default Value                                   |
+| ----------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| BASE_URL          | Public URL used to generate short URLs (should match the public address of URL Shortener Service). | http://localhost:3000                           |
+| JWT_SECRET        | Secret key for signing JWT tokens.                                                           | jwt_secret_key                                  |
+| DATABASE_URL      | PostgreSQL connection string.                                                                | postgres://user:password@postgres:5432/database |
+| POSTGRES_USER     | Username for the PostgreSQL container (must match DATABASE_URL).                             | user                                            |
+| POSTGRES_PASSWORD | Password for the PostgreSQL container (must match DATABASE_URL).                             | password                                        |
+| POSTGRES_DB       | Database name for the PostgreSQL container (must match DATABASE_URL).                        | database                                        |
+| NODE_ENV          | Node.js environment (production, development, etc.)                                          | production                                      |
+| LOG_LEVEL         | Logging level for the services (e.g., info, debug, warn, error)                              | info                                            |
 
 > These variables must be consistent between `.env` and your Docker Compose setup.
 
@@ -132,23 +132,27 @@ choco install make
 This project uses [KrakenD](https://www.krakend.io/) as an API Gateway to provide a unified entry point for all services.
 
 - **Gateway URL:** [http://localhost:8080](http://localhost:8080)
-- All API requests (authentication, URL shortening, redirection, etc.) can be made through the gateway.
 
-### Example Endpoints via Gateway
+### Endpoints via Gateway
 
 - Register: `POST http://localhost:8080/auth/register`
 - Login: `POST http://localhost:8080/auth/login`
 - Shorten URL: `POST http://localhost:8080/shorten`
 - List URLs: `GET http://localhost:8080/urls`
-- Redirect: `GET http://localhost:8080/{shortUrl}`
+- Delete URL: `DELETE http://localhost:8080/urls/:id`
+- Update URL: `PATCH http://localhost:8080/urls/:id`
 
 ### BASE_URL configuration
 
-To ensure that generated short URLs point to the gateway, set in your `.env`:
+- The `BASE_URL` variable defines the base address used to compose the `shortUrl` field returned by the API (e.g., `shortUrl: BASE_URL/<code>`).
 
 ```
-BASE_URL=http://localhost:8080
+BASE_URL=http://localhost:3000
 ```
+
+> **Note:** KrakenD (Community Edition) does not support HTTP redirects.  
+> To ensure that short URLs work correctly, set `BASE_URL` to the URL Shortener Service address (e.g., `http://localhost:3000`).  
+> All redirection requests must go directly to the URL Shortener Service, not through the API Gateway.
 
 ### How to run with KrakenD
 
