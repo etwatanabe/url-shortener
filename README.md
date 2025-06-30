@@ -3,6 +3,9 @@
 A simple URL shortener service built as a monorepo using [NestJS](https://nestjs.com/), [Prisma](https://www.prisma.io/), and [PostgreSQL](https://www.postgresql.org/).  
 The project follows a modular architecture with multiple services (such as authentication and URL management), orchestrated via Docker Compose and exposed through a unified API Gateway ([KrakenD](https://www.krakend.io/)).
 
+
+--- 
+
 ## Tech Stack
 
 - [NestJS](https://nestjs.com/) – Backend framework (monorepo, modular architecture)
@@ -247,23 +250,18 @@ The hooks will be activated automatically.
 
 ---
 
-## Changelog
+## **Live Demo**
 
-See [CHANGELOG.md](CHANGELOG.md) for release notes.
+- **Production URL Shortener Service**: https://url-shortener-m4dk.onrender.com
+- **URL Shortener API Documentation**: https://url-shortener-m4dk.onrender.com/docs
+- **Production Auth Service**: https://url-shortener-auth.onrender.com
+- **Auth API Documentation**: https://url-shortener-auth.onrender.com/docs
 
----
-
-## 🚀 **URL Shortener Live Demo**
-
-- **Production URL**: https://url-shortener-m4dk.onrender.com
-- **API Documentation**: https://url-shortener-m4dk.onrender.com/docs
-
-> **Note**: The service runs on Render's free tier, which may experience cold starts (15-30 seconds delay on first request after inactivity).  
-> **Only the URL Shortener Service is deployed**. Authentication features require local development setup.
+> **Note**: Both services run on Render's free tier, which may experience cold starts (15-30 seconds delay on first request after inactivity).
 
 ### Usage Examples
 
-#### **Anonymous URL Shortening (Production)**
+#### **Anonymous URL Shortening**
 
 ##### **Bash/Linux/macOS**
 ```bash
@@ -288,9 +286,71 @@ curl -L https://url-shortener-m4dk.onrender.com/xyz789
 # This will redirect to https://www.example.com
 ```
 
+#### **Authentication & User Management (Full Production Features)**
+
+##### **Register a new user**
+```bash
+curl -X POST https://url-shortener-auth.onrender.com/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123",
+    "name": "Test User"
+  }'
+```
+
+##### **Login and get access token**
+```bash
+curl -X POST https://url-shortener-auth.onrender.com/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com", 
+    "password": "password123"
+  }'
+```
+
+##### **Create authenticated short URL**
+```bash
+curl -X POST https://url-shortener-m4dk.onrender.com/shorten \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -d '{"longUrl": "https://www.example.com"}'
+```
+
+##### **List your URLs with click stats**
+```bash
+curl -X GET https://url-shortener-m4dk.onrender.com/urls \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+##### **Update a URL**
+```bash
+curl -X PATCH https://url-shortener-m4dk.onrender.com/urls/YOUR_URL_ID \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -d '{"longUrl": "https://www.new-example.com"}'
+```
+
+##### **Delete a URL**
+```bash
+curl -X DELETE https://url-shortener-m4dk.onrender.com/urls/YOUR_URL_ID \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+> **📝 Note**: Replace `YOUR_ACCESS_TOKEN` with the actual JWT token received from the login response, and `YOUR_URL_ID` with the ID of the URL you want to manage.
+
+
+### **Production Architecture**
+
+Both services are deployed independently:
+- **Auth Service**: Handles user registration, login, and JWT token generation
+- **URL Shortener Service**: Handles URL shortening, redirection, and user URL management
+- **Database**: Shared PostgreSQL database for both services
+- **Cross-service communication**: Services communicate via HTTP for user authentication
+
 ---
 
-## 📈 Horizontal Scaling Considerations
+## Horizontal Scaling Considerations
 
 ### Current Architecture Limitations
 - Database: Single PostgreSQL instance (vertical scaling only)
@@ -319,3 +379,11 @@ curl -L https://url-shortener-m4dk.onrender.com/xyz789
 - **Database bottleneck**: Most challenging to scale
 - **Cache invalidation**: Maintaining consistency across instances  
 - **Distributed logging**: Centralized log aggregation needed
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
+---
