@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.5.0] - 2025-01-30
+
+### Added
+
+- **Complete production deployment** on Render cloud platform with both services fully operational:
+  - URL Shortener Service: https://url-shortener-m4dk.onrender.com
+  - Auth Service: https://url-shortener-auth.onrender.com
+- **Live API documentation** accessible via Swagger UI for both production services
+- **Full feature set available in production** including anonymous URL shortening, user authentication, and complete URL management
+- **Comprehensive production examples** in README for multiple platforms (Bash, PowerShell, JavaScript)
+- **Production architecture documentation** explaining independent service deployment and cross-service communication
+
+
 ## [v0.4.2] - 2025-01-29
 
 ### Fixed
