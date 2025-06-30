@@ -250,3 +250,35 @@ The hooks will be activated automatically.
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
+---
+
+## 📈 Horizontal Scaling Considerations
+
+### Current Architecture Limitations
+- Database: Single PostgreSQL instance (vertical scaling only)
+- Session storage: In-memory (not shared between instances)
+- File storage: Local filesystem
+
+### Recommended Improvements for Horizontal Scaling
+1. **Database**: 
+   - Read replicas for better read performance
+   - Connection pooling (PgBouncer)
+   - Database sharding for very high traffic
+
+2. **Caching**: 
+   - Redis for session storage and frequently accessed URLs
+   - CDN for static assets
+
+3. **Stateless Services**:
+   - JWT tokens already stateless ✅
+   - Move any file storage to object storage (S3, GCS)
+
+4. **Load Balancing**:
+   - Multiple service instances behind load balancer
+   - Health checks for service discovery
+
+### Biggest Challenges
+- **Database bottleneck**: Most challenging to scale
+- **Cache invalidation**: Maintaining consistency across instances  
+- **Distributed logging**: Centralized log aggregation needed

@@ -1,10 +1,14 @@
 {
   "name": "url-shortener-service",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.4.2",
+  "description": "URL Shortener",
   "author": "Eduardo Takeshi",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.17.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "build": "nest build url-shortener-service && nest build auth-service",
     "build:url-shortener": "nest build url-shortener-service",
