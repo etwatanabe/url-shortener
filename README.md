@@ -253,6 +253,43 @@ See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 ---
 
+## 🚀 **URL Shortener Live Demo**
+
+- **Production URL**: https://url-shortener-m4dk.onrender.com
+- **API Documentation**: https://url-shortener-m4dk.onrender.com/docs
+
+> **Note**: The service runs on Render's free tier, which may experience cold starts (15-30 seconds delay on first request after inactivity).  
+> **Only the URL Shortener Service is deployed**. Authentication features require local development setup.
+
+### Usage Examples
+
+#### **Anonymous URL Shortening (Production)**
+
+##### **Bash/Linux/macOS**
+```bash
+# Create a short URL (anonymous)
+curl -X POST https://url-shortener-m4dk.onrender.com/shorten \
+  -H "Content-Type: application/json" \
+  -d '{"longUrl": "https://www.example.com"}'
+
+# Expected response:
+# {
+#   "id": "abc123",
+#   "longUrl": "https://www.example.com", 
+#   "shortUrl": "https://url-shortener-m4dk.onrender.com/xyz789",
+#   "userId": null,
+#   "clicks": 0,
+#   "createdAt": "2025-01-30T12:00:00.000Z",
+#   "updatedAt": "2025-01-30T12:00:00.000Z"
+# }
+
+# Access the short URL (redirect)
+curl -L https://url-shortener-m4dk.onrender.com/xyz789
+# This will redirect to https://www.example.com
+```
+
+---
+
 ## 📈 Horizontal Scaling Considerations
 
 ### Current Architecture Limitations
