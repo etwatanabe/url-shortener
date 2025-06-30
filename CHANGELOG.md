@@ -1,5 +1,19 @@
 # Changelog
 
+## [v0.4.2] - 2025-01-29
+
+### Fixed
+
+- Fixed Jest E2E configuration for auth-service that was causing module resolution errors with custom-logger library.
+- Corrected module path mapping in Jest configuration to properly resolve workspace libraries during E2E testing.
+
+### Changed
+
+- Improved logging system with structured logging using Pino across all services.
+- Enhanced observability with contextual log messages for better debugging and monitoring.
+
+---
+
 ## [v0.4.1] - 2024-06-29
 
 ### Fixed

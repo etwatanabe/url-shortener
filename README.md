@@ -14,6 +14,8 @@ The project follows a modular architecture with multiple services (such as authe
 - [Jest](https://jestjs.io/) – Unit and E2E testing
 - [Husky](https://typicode.github.io/husky/) & [lint-staged](https://github.com/lint-staged/lint-staged) – Git hooks for code quality
 - [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/) – Linting and code formatting
+- [Pino](https://getpino.io/) – Structured logging with contextual information
+
 
 ---
 
@@ -25,6 +27,7 @@ The project follows a modular architecture with multiple services (such as authe
 - URL click count.
 - Full API documentation via Swagger.
 - Docker Compose for easy local development.
+- Structured logging with Pino for enhanced observability and debugging.
 
 ## Getting Started
 
